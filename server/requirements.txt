@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+sse-starlette
+sqlalchemy
+python-dotenv
+langchain
+langchain-openai
+langchain-anthropic
+deepagents

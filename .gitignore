@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+app.db
+.env
+*.pyc
+.tools/
+.auth_secret
+client_dist/
+.vefaas/
+app.db-*
+server/_probe_*.py
+server/_wait_quota.py
+
+debug.log

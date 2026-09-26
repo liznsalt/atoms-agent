@@ -1,0 +1,241 @@
+@import "tailwindcss";
+
+/* ---------- 双主题（深/浅）语义色 token ---------- */
+/* 默认深色（产品基调）；.dark 也映射同一套 —— 便于显式控制，主题由 <html class> 决定 */
+@theme inline {
+  --color-base: var(--c-base);
+  --color-surface: var(--c-surface);
+  --color-line: var(--c-line);
+  --color-line-strong: var(--c-line-strong);
+  --color-ink: var(--c-ink);
+  --color-ink-soft: var(--c-ink-soft);
+  --color-ink-mute: var(--c-ink-mute);
+}
+
+:root {
+  /* 浅色主题 */
+  --c-base: #fafafa;
+  --c-surface: #ffffff;
+  --c-line: #e4e4e7;
+  --c-line-strong: #d4d4d8;
+  --c-ink: #18181b;
+  --c-ink-soft: #3f3f46;
+  --c-ink-mute: #a1a1aa;
+}
+
+.dark {
+  /* 深色主题（原 zinc 色阶） */
+  --c-base: #09090b;
+  --c-surface: #18181b;
+  --c-line: #27272a;
+  --c-line-strong: #3f3f46;
+  --c-ink: #f4f4f5;
+  --c-ink-soft: #a1a1aa;
+  --c-ink-mute: #71717a;
+}
+
+body {
+  background-color: var(--c-base);
+  color: var(--c-ink);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "PingFang SC",
+    "Microsoft YaHei",
+    "Noto Sans CJK SC",
+    sans-serif;
+}
+
+::selection {
+  background-color: rgb(52 211 153 / 0.35);
+}
+
+/* 细滚动条（跟随主题） */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-line-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--c-line-strong);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* 顶部导航当前页：仅文字强调，不加背景 */
+.router-link-active {
+  color: var(--c-ink);
+  font-weight: 500;
+}
+
+/* ---------- 入场与过渡动画（尊重系统"减少动态效果"偏好） ---------- */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 消息卡/卡片入场：淡入 + 轻微上移（可叠加 delay-* 工具类做 stagger） */
+.animate-rise {
+  animation: rise-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 弹层过渡（Vue <Transition name="pop">） */
+.pop-enter-active,
+.pop-leave-active {
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.pop-enter-active > div,
+.pop-leave-active > div {
+  transition: transform 0.18s ease;
+}
+
+.pop-enter-from,
+.pop-leave-to {
+  opacity: 0;
+}
+
+.pop-enter-from > div,
+.pop-leave-to > div {
+  transform: scale(0.96) translateY(6px);
+}
+
+/* 路由页面切换淡入 */
+.page-fade-enter-active {
+  transition: opacity 0.2s ease;
+}
+
+.page-fade-enter-from {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .thinking-dot,
+  .thinking-caret {
+    animation: none;
+  }
+
+  .pop-enter-active,
+  .pop-leave-active,
+  .pop-enter-active > div,
+  .pop-leave-active > div {
+    transition: none;
+  }
+}
+
+/* 生成中思考点动画 */
+@keyframes thinking-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.thinking-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #34d399;
+  animation: thinking-dot 1.1s ease-in-out infinite;
+}
+
+.thinking-dot-2 {
+  animation-delay: 0.18s;
+}
+
+.thinking-dot-3 {
+  animation-delay: 0.36s;
+}
+
+/* 流式输出光标（打字机效果） */
+@keyframes thinking-caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.thinking-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background-color: #34d399;
+  animation: thinking-caret 0.9s step-end infinite;
+}
+
+/* ---------- 代码语法高亮（highlight.js，固定深色代码底，两主题通用） ---------- */
+.code-view {
+  background-color: #0d1117;
+}
+
+.code-view .hljs-keyword,
+.code-view .hljs-selector-tag,
+.code-view .hljs-literal,
+.code-view .hljs-section {
+  color: #ff7b72;
+}
+
+.code-view .hljs-string,
+.code-view .hljs-attr,
+.code-view .hljs-template-string {
+  color: #a5d6ff;
+}
+
+.code-view .hljs-title,
+.code-view .hljs-title.function_,
+.code-view .hljs-name {
+  color: #d2a8ff;
+}
+
+.code-view .hljs-number,
+.code-view .hljs-symbol {
+  color: #79c0ff;
+}
+
+.code-view .hljs-comment,
+.code-view .hljs-quote {
+  color: #8b949e;
+  font-style: italic;
+}
+
+.code-view .hljs-tag {
+  color: #7ee787;
+}
+
+.code-view .hljs-attribute,
+.code-view .hljs-variable,
+.code-view .hljs-property {
+  color: #ffa657;
+}
